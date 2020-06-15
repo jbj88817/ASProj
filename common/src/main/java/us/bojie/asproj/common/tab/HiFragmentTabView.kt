@@ -7,11 +7,8 @@ import androidx.fragment.app.Fragment
 
 class HiFragmentTabView(
     context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0,
-    defStyleRes: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
-
+    attrs: AttributeSet? = null
+) : FrameLayout(context, attrs) {
 
     var mAdapter: HiTabViewAdapter? = null
         set(value) {
@@ -19,9 +16,8 @@ class HiFragmentTabView(
                 return
             }
             field = value
-            mCurrentPosition = -1
         }
-    var mCurrentPosition: Int = 0
+    var mCurrentPosition: Int = -1
         set(value) {
             if (value < 0 || value >= mAdapter?.getCount() ?: 0) {
                 return
