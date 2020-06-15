@@ -1,6 +1,7 @@
 package us.bojie.asproj.logic
 
 import android.content.res.Resources
+import android.os.Bundle
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
@@ -12,17 +13,31 @@ import us.bojie.asproj.fragment.*
 import us.bojie.hi.ui.tab.bottom.HiTabBottomInfo
 import us.bojie.hi.ui.tab.bottom.HiTabBottomLayout
 
-class MainActivityLogic(private val activityProvider: ActivityProvider) {
+class MainActivityLogic(
+    private val activityProvider: ActivityProvider,
+    savedInstanceState: Bundle?
+) {
+    companion object {
+        const val SAVED_CURRENT_ID = "SAVED_CURRENT_ID"
+    }
+
     lateinit var fragmentTabView: HiFragmentTabView
         private set
     lateinit var hiTabBottomLayout: HiTabBottomLayout
         private set
     lateinit var infoList: List<HiTabBottomInfo<*>>
         private set
-    private val currentItemIndex = 0
+    private var currentItemIndex = 0
 
     init {
+        savedInstanceState?.let {
+            currentItemIndex = it.getInt(SAVED_CURRENT_ID)
+        }
         initTabBottom()
+    }
+
+    fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(SAVED_CURRENT_ID, currentItemIndex)
     }
 
     private fun initTabBottom() {
@@ -82,8 +97,9 @@ class MainActivityLogic(private val activityProvider: ActivityProvider) {
             inflateInfo(infoList)
             addTabSelectedChangeListener { index, prevInfo, nextInfo ->
                 fragmentTabView.mCurrentPosition = index
+                this@MainActivityLogic.currentItemIndex = index
             }
-            defaultSelected(homeInfo)
+            defaultSelected(infoList[currentItemIndex])
         }
     }
 
